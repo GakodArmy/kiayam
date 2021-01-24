@@ -187,17 +187,17 @@ wget -O /home/vps/public_html/index.html https://raw.githubusercontent.com/padub
 wget -O /etc/nginx/conf.d/vps.conf "https://raw.githubusercontent.com/ara-rangers/vps/master/vps.conf"
 sed -i 's/listen = \/var\/run\/php7.0-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php/7.0/fpm/pool.d/www.conf
 service php7.0-fpm restart
-# install openvpn
+#  openvpn
 apt-get -y install openvpn
-wget -O /etc/openvpn/openvpn.tar "https://gakod.com/premium/openvpn-debian.tar"
 cd /etc/openvpn/
-tar xf openvpn.tar
+wget -O openvpn.tar "https://raw.githubusercontent.com/BangJaguh/mulu/main/certi.tar"
+tar xf openvpn.tar;rm openvpn.tar
 wget -O /etc/rc.local "https://raw.githubusercontent.com/guardeumvpn/Qwer77/master/rc.local"
 chmod +x /etc/rc.local
 
 # server settings
 cd /etc/openvpn/
-wget -O /etc/openvpn/server.conf "https://raw.githubusercontent.com/GakodArmy/teli/main/Bdbd/server.conf"
+wget -O /etc/openvpn/server.conf "https://raw.githubusercontent.com/BangJaguh/mulu/main/server.conf"
 systemctl start openvpn@server
 sysctl -w net.ipv4.ip_forward=1
 sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
@@ -213,37 +213,11 @@ wget -qO /etc/openvpn/openvpn.bash "https://raw.githubusercontent.com/ara-ranger
 chmod +x /etc/openvpn/openvpn.bash
 
 # openvpn config
-wget -O /etc/openvpn/client.ovpn "https://raw.githubusercontent.com/GakodArmy/teli/main/Bdbd/client.conf"
+wget -O /etc/openvpn/client.ovpn "https://raw.githubusercontent.com/BangJaguh/mulu/main/client.conf"
 sed -i $MYIP2 /etc/openvpn/client.ovpn;
-echo '<ca>' >> /etc/openvpn/client.ovpn
-cat /etc/openvpn/keys/ca.crt >> /etc/openvpn/client.ovpn
-echo '</ca>' >> /etc/openvpn/client.ovpn
 sed -i $MYIP2 /etc/openvpn/client.ovpn;
-echo '<cert>' >> /etc/openvpn/client.ovpn
-cat /etc/openvpn/keys/DopekidVPN.crt >> /etc/openvpn/client.ovpn
-echo '</cert>' >> /etc/openvpn/client.ovpn
-sed -i $MYIP2 /etc/openvpn/client.ovpn;
-echo '<key>' >> /etc/openvpn/client.ovpn
-cat /etc/openvpn/keys/DopekidVPN.key >> /etc/openvpn/client.ovpn
-echo '</key>' >> /etc/openvpn/client.ovpn
-sed -i $MYIP2 /etc/openvpn/client.ovpn;
-echo '<tls-auth>' >> /etc/openvpn/client.ovpn
 /etc/openvpn/client.ovpn
 cp client.ovpn /home/vps/public_html/
-
-# Deb9 OVPN Bug Workaround
-mkdir -p /dev/net
-mknod /dev/net/tun c 10 200
-chmod 600 /dev/net/tun
-
-# Deb9 OVPN Bug2 Workaround 
-sed -i 's@LimitNPROC=10@@g' /lib/systemd/system/openvpn@.service
-
-# Restart openvpn
-systemctl daemon-reload
-systemctl start openvpn@server
-systemctl enable openvpn@server
-systemctl status --no-pager openvpn@server
 
 # Setting UFW
 apt-get install ufw
@@ -292,9 +266,6 @@ sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
 /etc/init.d/stunnel4 restart
 
 cd
-
-echo "UPDATE AND INSTALL COMPLETE COMPLETE 99% BE PATIENT"
-rm *.sh;rm *.txt;rm *.tar;rm *.deb;rm *.asc;rm *.zip;rm ddos*;
 
 # finishing
 cd
